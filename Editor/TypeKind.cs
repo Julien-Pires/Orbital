@@ -12,7 +12,6 @@
         Enum,
         Class,
         Struct,
-        Object,
         Array,
         List,
         Dictionary

@@ -1,6 +1,6 @@
 ﻿namespace Orbital.Data
 {
-    internal sealed class ObjectDescription : BaseDescription
+    internal sealed class ObjectDescription : TypeDescription
     {
         #region Fields
 
@@ -19,7 +19,7 @@
 
         #region Constructors
 
-        internal ObjectDescription(string name, TypeKind kind) : base(name)
+        internal ObjectDescription(string name, TypeKind kind) : base(name, kind)
         {
             _isClass = (kind == TypeKind.Class);
         }

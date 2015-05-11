@@ -21,7 +21,7 @@ namespace Orbital.Data
 
         #region Constructors
 
-        internal PrimitiveDescription(Type type) : base(type.Name)
+        internal PrimitiveDescription(Type type, TypeKind kind) : base(type.Name, kind)
         {
             _type = type;
         }

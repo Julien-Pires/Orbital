@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Orbital.Data
 {
-    internal sealed class EnumDescription : BaseDescription
+    internal sealed class EnumDescription : TypeDescription
     {
         #region Fields
 
@@ -22,9 +22,9 @@ namespace Orbital.Data
 
         #region Constructors
 
-        internal EnumDescription(string name, IEnumerable<string> value) : base(name)
+        internal EnumDescription(string name, IEnumerable<string> values) : base(name, TypeKind.Enum)
         {
-            _values = value.ToArray();
+            _values = values.ToArray();
         }
 
         #endregion
