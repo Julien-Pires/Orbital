@@ -4,25 +4,25 @@
     {
         #region Fields
 
-        private readonly TypeDescription _type;
+        private readonly TypeDescription _typeDescription;
 
         #endregion
 
         #region Properties
 
-        public TypeDescription Type
+        public TypeDescription TypeDescription
         {
-            get { return _type; }
+            get { return _typeDescription; }
         }
 
         #endregion
 
         #region Constructors
 
-        internal PropertyDescription(string name, TypeKind kind)
+        internal PropertyDescription(string name, TypeDescription typeDescriptionDescription)
             : base(name)
         {
-            _type = TypeDescription.GetType(kind);
+            _typeDescription = typeDescriptionDescription;
         }
 
         #endregion

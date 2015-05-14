@@ -36,13 +36,13 @@ namespace Orbital.Data
 
         #region Search Methods
 
-        internal static TypeDescription GetType(TypeKind kind)
+        internal static TypeDescription GetPrimitiveType(TypeKind kind)
         {
             TypeDescription type;
-            if (PrimitiveTypeMap.TryGetValue(kind, out type))
-                return type;
+            if (!PrimitiveTypeMap.TryGetValue(kind, out type))
+                return null;
 
-            return null;
+            return type;
         }
 
         #endregion

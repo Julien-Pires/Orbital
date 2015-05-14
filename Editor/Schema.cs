@@ -6,7 +6,7 @@
 
         public string Namespace { get; set; }
 
-        public TypeSchema[] Types { get; set; }
+        public ObjectSchema[] Objects { get; set; }
 
         #endregion
     }

@@ -1,6 +1,6 @@
 ﻿namespace Orbital
 {
-    public sealed class TypeSchema
+    public sealed class ObjectSchema
     {
         #region Properties
 
