@@ -25,6 +25,22 @@ namespace Orbital.Data
 
         #endregion
 
+        #region Indexers
+
+        public PropertyDescription this[string name]
+        {
+            get { return _properties[name]; }
+            set
+            {
+                if (value != null)
+                    AddProperty(value);
+                else
+                    RemoveProperty(name);
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         internal ObjectDescription(string name, TypeKind kind) : base(name, kind)

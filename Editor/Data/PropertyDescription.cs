@@ -2,27 +2,17 @@
 {
     internal sealed class PropertyDescription : BaseDescription
     {
-        #region Fields
-
-        private readonly TypeDescription _typeDescription;
-
-        #endregion
-
         #region Properties
 
-        public TypeDescription TypeDescription
-        {
-            get { return _typeDescription; }
-        }
+        public TypeDescription TypeDescription { get; internal set; }
 
         #endregion
 
         #region Constructors
 
-        internal PropertyDescription(string name, TypeDescription typeDescriptionDescription)
+        internal PropertyDescription(string name)
             : base(name)
         {
-            _typeDescription = typeDescriptionDescription;
         }
 
         #endregion

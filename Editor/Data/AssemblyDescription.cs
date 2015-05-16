@@ -25,7 +25,7 @@ namespace Orbital.Data
 
         private NamespaceMap EnsureNamespace(string namespaceName)
         {
-            if(string.IsNullOrEmpty(namespaceName))
+            if(namespaceName == null)
                 throw new ArgumentNullException("namespaceName");
 
             NamespaceMap map;
@@ -44,7 +44,7 @@ namespace Orbital.Data
 
         public void RegisterType(string namespaceName, TypeDescription typeDescription)
         {
-            if(string.IsNullOrEmpty(namespaceName))
+            if(namespaceName == null)
                 throw new ArgumentNullException("namespaceName");
 
             if(typeDescription == null)

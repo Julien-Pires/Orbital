@@ -1,10 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Orbital.Data
 {
     internal abstract class TypeDescription : BaseDescription
     {
         #region Fields
+
+        private static readonly Dictionary<Type, TypeKind> PrimitiveMap = new Dictionary<Type, TypeKind>
+        {
+            { typeof(int), TypeKind.Int},
+            { typeof(Int32), TypeKind.Int},
+            { typeof(short), TypeKind.Short},
+            { typeof(Int16), TypeKind.Short},
+            { typeof(long), TypeKind.Long},
+            { typeof(Int64), TypeKind.Long},
+            { typeof(byte), TypeKind.Byte},
+            { typeof(Byte), TypeKind.Byte},
+            { typeof(float), TypeKind.Float},
+            { typeof(Single), TypeKind.Float},
+            { typeof(double), TypeKind.Double},
+            { typeof(Double), TypeKind.Double},
+            { typeof(string), TypeKind.String},
+            { typeof(String), TypeKind.String}
+        };
 
         private static readonly Dictionary<TypeKind, TypeDescription> PrimitiveTypeMap = new Dictionary<TypeKind, TypeDescription>
         {
@@ -35,6 +54,15 @@ namespace Orbital.Data
         #endregion
 
         #region Search Methods
+
+        internal static TypeDescription GetPrimitiveType(Type type)
+        {
+            TypeKind kind;
+            if (!PrimitiveMap.TryGetValue(type, out kind))
+                return null;
+
+            return GetPrimitiveType(kind);
+        }
 
         internal static TypeDescription GetPrimitiveType(TypeKind kind)
         {
