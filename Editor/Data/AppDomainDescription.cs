@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -11,7 +12,10 @@ namespace Orbital.Data
     {
         #region Fields
 
-        private readonly Dictionary<string, AssemblyDescription> _assemblies = new Dictionary<string, AssemblyDescription>();
+        private const BindingFlags FieldsFlag = BindingFlags.Instance | BindingFlags.Public;
+
+        private readonly Dictionary<string, AssemblyDescription> _assemblies =
+            new Dictionary<string, AssemblyDescription>();
 
         #endregion
 
@@ -84,7 +88,7 @@ namespace Orbital.Data
             switch (kind)
             {
                 case TypeKind.Enum:
-                    type = new EnumDescription(name, (IEnumerable<string>)parameters);
+                    type = new EnumDescription(name, (string[])parameters);
                     break;
 
                 case TypeKind.Class:
@@ -122,27 +126,21 @@ namespace Orbital.Data
             if (type == null)
                 throw new ArgumentNullException("type");
 
-            TypeDescription typeDescription = null;
+            AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
             if (type.IsPrimitive)
-            {
-                typeDescription = TypeDescription.GetPrimitiveType(type);
-            }
+                assembly.RegisterType(type.Namespace, TypeDescription.GetPrimitiveType(type));
             else if (type.IsEnum)
-            {
-                typeDescription = new EnumDescription(type.Name, Enum.GetValues(type).Cast<string>());
-            }
+                assembly.RegisterType(type.Namespace, new EnumDescription(type.Name, Enum.GetNames(type)));
             else if (type.IsClass || type.IsValueType)
             {
-                typeDescription = CreateObjectType(type);
+                TypeKind objKind = type.IsClass ? TypeKind.Class : TypeKind.Struct;
+                ObjectDescription objDescription = new ObjectDescription(type.Name, objKind);
+                assembly.RegisterType(type.Namespace, objDescription);
+
+                ExtractObjectProperties(objDescription, type);
             }
 
-            if(typeDescription == null)
-                throw new InvalidOperationException(string.Format("Failed to create type from {0}", type));
-
-            AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
-            assembly.RegisterType(type.Namespace, typeDescription);
-
-            return typeDescription;
+            return assembly.GetType(type.Namespace, type.Name);
         }
 
         private TypeDescription GetOrCreateType(Type type)
@@ -152,15 +150,18 @@ namespace Orbital.Data
             return GetType(assemblyName, type.FullName) ?? RegisterTypeFromClrType(type);
         }
 
-        private ObjectDescription CreateObjectType(Type type)
+        private void ExtractObjectProperties(ObjectDescription objDescription, Type type)
         {
-            ObjectDescription objDescription = new ObjectDescription(type.Name, (type.IsClass ? TypeKind.Class : TypeKind.Struct));
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public
-                                                           | BindingFlags.GetProperty | BindingFlags.SetProperty);
+            PropertyInfo[] properties = type.GetProperties(FieldsFlag);
             for (int i = 0; i < properties.Length; i++)
             {
-                Type propertyType = properties[i].PropertyType;
-                TypeDescription typeDescription = GetOrCreateType(propertyType);
+                if(!properties[i].CanRead || !properties[i].CanWrite)
+                    continue;
+
+                if(properties[i].GetIndexParameters().Length > 0)
+                    continue;
+
+                TypeDescription typeDescription = GetOrCreateType(properties[i].PropertyType);
                 PropertyDescription propertyDescription = new PropertyDescription(properties[i].Name)
                 {
                     TypeDescription = typeDescription
@@ -169,7 +170,20 @@ namespace Orbital.Data
                 objDescription[propertyDescription.Name] = propertyDescription;
             }
 
-            return objDescription;
+            FieldInfo[] fields = type.GetFields(FieldsFlag);
+            for (int i = 0; i < fields.Length; i++)
+            {
+                if (fields[i].IsInitOnly)
+                    continue;
+
+                TypeDescription typeDescription = GetOrCreateType(fields[i].FieldType);
+                PropertyDescription propertyDescription = new PropertyDescription(fields[i].Name)
+                {
+                    TypeDescription = typeDescription
+                };
+
+                objDescription[propertyDescription.Name] = propertyDescription;
+            }
         }
 
         #endregion

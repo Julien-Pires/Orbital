@@ -1,10 +1,14 @@
-﻿namespace Orbital.Data
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace Orbital.Data
 {
     internal static class DescriptionHelper
     {
         #region Assembly Methods
 
-        internal static void ExtractNames(string fullname, out string namespaceName, out string typeName)
+        public static void ExtractNames(string fullname, out string namespaceName, out string typeName)
         {
             namespaceName = string.Empty;
             typeName = string.Empty;
@@ -14,7 +18,7 @@
                 return;
 
             if (splitname.Length > 1)
-                namespaceName = string.Join(".", splitname, 0, splitname.Length - 2);
+                namespaceName = string.Join(".", splitname, 0, splitname.Length - 1);
 
             typeName = splitname[splitname.Length - 1];
         }

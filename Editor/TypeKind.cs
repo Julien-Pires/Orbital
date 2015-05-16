@@ -5,6 +5,7 @@
         Int,
         Short,
         Long,
+        Bool,
         Byte,
         Float,
         Double,

@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-namespace Orbital.Data
+﻿namespace Orbital.Data
 {
     internal sealed class EnumDescription : TypeDescription
     {
@@ -22,9 +19,9 @@ namespace Orbital.Data
 
         #region Constructors
 
-        internal EnumDescription(string name, IEnumerable<string> values) : base(name, TypeKind.Enum)
+        internal EnumDescription(string name, string[] values) : base(name, TypeKind.Enum)
         {
-            _values = values.ToArray();
+            _values = values;
         }
 
         #endregion

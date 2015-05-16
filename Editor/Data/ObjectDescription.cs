@@ -13,6 +13,16 @@ namespace Orbital.Data
 
         #region Properties
 
+        public int PropertiesCount
+        {
+            get { return _properties.Count; }
+        }
+
+        public IEnumerable<string> PropertiesName
+        {
+            get { return _properties.Keys; }
+        }
+
         public bool IsClass
         {
             get { return Kind == TypeKind.Class; }
