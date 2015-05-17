@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
+using Orbital.Extension;
+
 using UnityEngine;
 
 namespace Orbital.Data
@@ -126,21 +128,87 @@ namespace Orbital.Data
             if (type == null)
                 throw new ArgumentNullException("type");
 
-            AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
             if (type.IsPrimitive)
-                assembly.RegisterType(type.Namespace, TypeDescription.GetPrimitiveType(type));
-            else if (type.IsEnum)
-                assembly.RegisterType(type.Namespace, new EnumDescription(type.Name, Enum.GetNames(type)));
-            else if (type.IsClass || type.IsValueType)
-            {
-                TypeKind objKind = type.IsClass ? TypeKind.Class : TypeKind.Struct;
-                ObjectDescription objDescription = new ObjectDescription(type.Name, objKind);
-                assembly.RegisterType(type.Namespace, objDescription);
+                return RegisterPrimitive(type);
 
-                ExtractObjectProperties(objDescription, type);
+            if (type.IsEnum)
+                return RegisterEnum(type);
+
+            if (type.IsClass || type.IsValueType)
+            {
+                if (type.IsArray || type.ImplementsInterfaces(typeof(IList), typeof(IDictionary)))
+                    return RegisterCollection(type);
+
+                return RegisterObject(type);
             }
 
-            return assembly.GetType(type.Namespace, type.Name);
+            throw new ArgumentException(string.Format("Failed to create type from {0}", type));
+        }
+
+        private TypeDescription RegisterObject(Type type)
+        {
+            AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
+            ObjectDescription objDescription = new ObjectDescription(type.Name,
+                (type.IsClass ? TypeKind.Class : TypeKind.Struct));
+            assembly.RegisterType(type.Namespace, objDescription);
+
+            ExtractObjectProperties(objDescription, type);
+
+            return objDescription;
+        }
+
+        private TypeDescription RegisterCollection(Type type)
+        {
+            TypeKind kind;
+            Type[] elementTypes;
+            string name = type.Name;
+            if (!type.IsArray)
+            {
+                if (type.GetInterfaces().Any(c => c == typeof (IList)))
+                    kind = TypeKind.List;
+                else if (type.GetInterfaces().Any(c => c == typeof (IDictionary)))
+                    kind = TypeKind.Dictionary;
+                else
+                    throw new ArgumentException(string.Format("{0} is not a supported collection type", type));
+
+                elementTypes = type.GetGenericArguments();
+                if (elementTypes.Length == 0)
+                    throw new InvalidOperationException(string.Format("Only generics collection are supported : {0}", type));
+
+                name = type.GetGenericsName();
+            }
+            else
+            {
+                kind = TypeKind.Array;
+                elementTypes = new []{ type.GetElementType() };
+            }
+
+            CollectionDescription collectionDescription = new CollectionDescription(name, kind);
+            AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
+            assembly.RegisterType(type.Namespace, collectionDescription);
+
+            for(int i = 0; i < elementTypes.Length; i++)
+                collectionDescription.AddType(GetOrCreateType(elementTypes[i]));
+
+            return collectionDescription;
+        }
+
+        private TypeDescription RegisterPrimitive(Type type)
+        {
+            AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
+            TypeDescription typeDescription = TypeDescription.GetPrimitiveType(type);
+            assembly.RegisterType(type.Namespace, typeDescription);
+
+            return typeDescription;
+        }
+
+        private TypeDescription RegisterEnum(Type type)
+        {
+            AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
+            TypeDescription typeDescription = new EnumDescription(type.Name, Enum.GetNames(type));
+            assembly.RegisterType(type.Namespace, typeDescription);
+
+            return typeDescription;
         }
 
         private TypeDescription GetOrCreateType(Type type)

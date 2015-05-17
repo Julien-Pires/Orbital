@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-
-namespace Orbital.Data
+﻿namespace Orbital.Data
 {
     internal static class DescriptionHelper
     {
