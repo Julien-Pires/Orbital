@@ -8,7 +8,7 @@
 
         public TypeKind Kind { get; set; }
 
-        public string TypeRef { get; set; }
+        public string[] Types { get; set; }
 
         #endregion
     }

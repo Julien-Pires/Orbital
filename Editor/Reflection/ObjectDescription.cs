@@ -1,20 +1,78 @@
-﻿namespace Orbital.Reflection
+﻿using System;
+using System.Collections.Generic;
+
+namespace Orbital.Reflection
 {
-    internal class ObjectDescription
+    public sealed class ObjectDescription : TypeDescription
     {
         #region Fields
 
-        private object _parent;
-        private object _data;
+        private readonly Dictionary<string, PropertyDescription> _properties = new Dictionary<string, PropertyDescription>();
+
+        #endregion
+
+        #region Properties
+
+        public int PropertiesCount
+        {
+            get { return _properties.Count; }
+        }
+
+        public IEnumerable<string> PropertiesName
+        {
+            get { return _properties.Keys; }
+        }
+
+        public bool IsClass
+        {
+            get { return Kind == TypeKind.Class; }
+        }
+
+        public bool IsStruct
+        {
+            get { return Kind == TypeKind.Struct; }
+        }
+
+        #endregion
+
+        #region Indexers
+
+        public PropertyDescription this[string name]
+        {
+            get { return _properties[name]; }
+            set
+            {
+                if (value != null)
+                    AddProperty(value);
+                else
+                    RemoveProperty(name);
+            }
+        }
 
         #endregion
 
         #region Constructors
 
-        internal ObjectDescription(object data, object parent)
+        internal ObjectDescription(string name, TypeKind kind, Type clrType)
+            : base(name, kind, clrType)
         {
-            _parent = parent;
-            _data = data;
+        }
+
+        #endregion
+
+        #region Object Properties Methods
+
+        internal void AddProperty(PropertyDescription property)
+        {
+            if(property == null)
+                throw new ArgumentNullException("property");
+
+            _properties[property.Name] = property;
+        }
+
+        internal bool RemoveProperty(string name)
+        {
+            return _properties.Remove(name);
         }
 
         #endregion

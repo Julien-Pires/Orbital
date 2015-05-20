@@ -1,4 +1,4 @@
-﻿namespace Orbital.Data
+﻿namespace Orbital.Reflection
 {
     internal static class DescriptionHelper
     {

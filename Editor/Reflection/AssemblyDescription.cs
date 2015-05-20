@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Orbital.Data
+namespace Orbital.Reflection
 {
     using NamespaceMap = Dictionary<string, TypeDescription>;
 

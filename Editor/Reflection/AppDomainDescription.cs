@@ -8,7 +8,7 @@ using Orbital.Extension;
 
 using UnityEngine;
 
-namespace Orbital.Data
+namespace Orbital.Reflection
 {
     internal sealed class AppDomainDescription : BaseDescription
     {
@@ -43,23 +43,6 @@ namespace Orbital.Data
             return assembly;
         }
 
-        internal AssemblyDescription CreateFromSchema(Schema schema)
-        {
-            if (schema == null)
-                throw new ArgumentNullException("schema");
-
-            ObjectSchema[] objSchemas = schema.Objects;
-            AssemblyDescription assembly = new AssemblyDescription(schema.Namespace);
-            for (int i = 0; i < objSchemas.Length; i++)
-            {
-                ObjectSchema currObjectSchema = objSchemas[i];
-                TypeDescription typeDescription = CreateTypeFromSchema(currObjectSchema);
-                assembly.RegisterType(currObjectSchema.Namespace, typeDescription);
-            }
-
-            return assembly;
-        }
-
         #endregion
 
         #region Type Methods
@@ -75,48 +58,6 @@ namespace Orbital.Data
         public TypeDescription RegisterType(Type type)
         {
             return RegisterTypeFromClrType(type);
-        }
-
-        #endregion
-
-        #region Schema Methods
-
-        private TypeDescription CreateType(string name, TypeKind kind, object parameters = null)
-        {
-            TypeDescription type = TypeDescription.GetPrimitiveType(kind);
-            if (type != null)
-                return type;
-
-            switch (kind)
-            {
-                case TypeKind.Enum:
-                    type = new EnumDescription(name, (string[])parameters);
-                    break;
-
-                case TypeKind.Class:
-                case TypeKind.Struct:
-                    type = new ObjectDescription(name, kind);
-                    break;
-
-                case TypeKind.Array:
-                case TypeKind.List:
-                case TypeKind.Dictionary:
-                    type = new CollectionDescription(name, kind);
-                    break;
-            }
-
-            if (type == null)
-                throw new InvalidOperationException(string.Format("{0} is not a supported type", kind));
-
-            return type;
-        }
-
-        private TypeDescription CreateTypeFromSchema(ObjectSchema objectSchema)
-        {
-            if (objectSchema == null)
-                throw new ArgumentNullException("objectSchema");
-
-            return CreateType(objectSchema.Name, objectSchema.Kind, objectSchema.Values);
         }
 
         #endregion
@@ -149,7 +90,7 @@ namespace Orbital.Data
         {
             AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
             ObjectDescription objDescription = new ObjectDescription(type.Name,
-                (type.IsClass ? TypeKind.Class : TypeKind.Struct));
+                (type.IsClass ? TypeKind.Class : TypeKind.Struct), type);
             assembly.RegisterType(type.Namespace, objDescription);
 
             ExtractObjectProperties(objDescription, type);
@@ -183,7 +124,7 @@ namespace Orbital.Data
                 elementTypes = new []{ type.GetElementType() };
             }
 
-            CollectionDescription collectionDescription = new CollectionDescription(name, kind);
+            CollectionDescription collectionDescription = new CollectionDescription(name, kind, type);
             AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
             assembly.RegisterType(type.Namespace, collectionDescription);
 
@@ -205,7 +146,7 @@ namespace Orbital.Data
         private TypeDescription RegisterEnum(Type type)
         {
             AssemblyDescription assembly = EnsureAssembly(type.Assembly.GetName().Name);
-            TypeDescription typeDescription = new EnumDescription(type.Name, Enum.GetNames(type));
+            TypeDescription typeDescription = new EnumDescription(type.Name, Enum.GetNames(type), type);
             assembly.RegisterType(type.Namespace, typeDescription);
 
             return typeDescription;
@@ -230,7 +171,7 @@ namespace Orbital.Data
                     continue;
 
                 TypeDescription typeDescription = GetOrCreateType(properties[i].PropertyType);
-                PropertyDescription propertyDescription = new PropertyDescription(properties[i].Name)
+                PropertyDescription propertyDescription = new PropertyDescription(properties[i].Name, false)
                 {
                     TypeDescription = typeDescription
                 };
@@ -245,7 +186,7 @@ namespace Orbital.Data
                     continue;
 
                 TypeDescription typeDescription = GetOrCreateType(fields[i].FieldType);
-                PropertyDescription propertyDescription = new PropertyDescription(fields[i].Name)
+                PropertyDescription propertyDescription = new PropertyDescription(fields[i].Name, true)
                 {
                     TypeDescription = typeDescription
                 };

@@ -1,4 +1,4 @@
-﻿namespace Orbital.Data
+﻿namespace Orbital.Reflection
 {
     public abstract class BaseDescription
     {

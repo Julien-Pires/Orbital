@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Orbital.Data
+namespace Orbital.Reflection
 {
     internal sealed class CollectionDescription : TypeDescription
     {
@@ -24,11 +25,17 @@ namespace Orbital.Data
             get { return Kind == TypeKind.Dictionary; }
         }
 
+        public bool IsArray
+        {
+            get { return Kind == TypeKind.Array; }
+        }
+
         #endregion
 
         #region Constructors
 
-        internal CollectionDescription(string name, TypeKind kind) : base(name, kind)
+        internal CollectionDescription(string name, TypeKind kind, Type clrType)
+            : base(name, kind, clrType)
         {
             _itemTypesReadOnly = new ReadOnlyCollection<TypeDescription>(_itemTypes);
         }

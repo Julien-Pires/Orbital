@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Orbital.Data
+namespace Orbital.Reflection
 {
-    internal abstract class TypeDescription : BaseDescription
+    public abstract class TypeDescription : BaseDescription
     {
         #region Fields
 
@@ -37,13 +37,16 @@ namespace Orbital.Data
 
         public TypeKind Kind { get; private set; }
 
+        public Type CLRType { get; private set; }
+
         #endregion
 
         #region Constructors
 
-        protected TypeDescription(string name, TypeKind kind) : base(name)
+        protected TypeDescription(string name, TypeKind kind, Type clrType) : base(name)
         {
             Kind = kind;
+            CLRType = clrType;
         }
 
         #endregion
