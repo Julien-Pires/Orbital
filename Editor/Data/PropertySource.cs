@@ -51,19 +51,31 @@ namespace Orbital.Data
 
         #endregion
 
-        public T GetValue<T>()
-        {
-            object value = _property.IsField ? ((FieldInfo) _member).GetValue(_parent) : ((PropertyInfo) _member).GetValue(_parent, null);
+        #region Value Source Methods
 
-            return (T) value;
+        public object GetValue()
+        {
+            return _property.IsField ? ((FieldInfo)_member).GetValue(_parent) : ((PropertyInfo)_member).GetValue(_parent, null);
         }
 
-        public void SetValue<T>(T value)
+        public void SetValue(object value)
         {
-            if(_property.IsField)
+            if (_property.IsField)
                 ((FieldInfo)_member).SetValue(_parent, value);
             else
                 ((PropertyInfo)_member).SetValue(_parent, value, null);
         }
+
+        public T GetValue<T>()
+        {
+            return (T) GetValue();
+        }
+
+        public void SetValue<T>(T value)
+        {
+            SetValue((object)value);
+        }
+
+        #endregion
     }
 }

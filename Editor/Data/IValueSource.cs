@@ -8,6 +8,10 @@ namespace Orbital.Data
     {
         #region Methods
 
+        object GetValue();
+
+        void SetValue(object value);
+
         T GetValue<T>();
 
         void SetValue<T>(T value);
