@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Orbital.Reflection
 {
-    internal sealed class CollectionDescription : TypeDescription
+    public sealed class CollectionDescription : TypeDescription
     {
         #region Fields
 
@@ -20,12 +20,17 @@ namespace Orbital.Reflection
             get { return _itemTypesReadOnly; }
         }
 
+        public bool IsList
+        {
+            get { return (Kind == TypeKind.Array) || (Kind == TypeKind.List); }
+        }
+
         public bool IsKeyed
         {
             get { return Kind == TypeKind.Dictionary; }
         }
 
-        public bool IsArray
+        public bool IsPureArray
         {
             get { return Kind == TypeKind.Array; }
         }

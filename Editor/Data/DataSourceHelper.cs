@@ -1,10 +1,8 @@
-﻿using System;
-
-using Orbital.Reflection;
+﻿using Orbital.Reflection;
 
 namespace Orbital.Data
 {
-    internal static class SourceFactory
+    internal static class DataSourceHelper
     {
         #region Factory Methods
 

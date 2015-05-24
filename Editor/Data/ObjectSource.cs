@@ -31,7 +31,7 @@ namespace Orbital.Data
             {
                 PropertyDescription propertyDescription = objDescription[name];
                 PropertySource propertySource = new PropertySource(parent, propertyDescription);
-                IValueSource source = SourceFactory.CreateSource(propertyDescription.Name, propertyDescription.TypeDescription, propertySource);
+                IValueSource source = DataSourceHelper.CreateSource(propertyDescription.Name, propertyDescription.TypeDescription, propertySource);
                 _properties.Add(source);
             }
         }

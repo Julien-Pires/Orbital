@@ -8,58 +8,69 @@ namespace Orbital.Data
     {
         #region Fields
 
-        private readonly TypeDescription _type;
-        private readonly string _name;
+        private readonly ICollectionSource _collectionSource;
 
         #endregion
 
         #region Properties
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get; internal set; }
 
         public Type CLRType
         {
-            get { return _type.CLRType; }
+            get { return Type.CLRType; }
         }
 
         public TypeDescription Type
         {
-            get { return _type; }
+            get { return _collectionSource.Type.ItemTypes[0]; }
         }
+
+        public Type KeyCLRType
+        {
+            get { return (KeyType != null) ? KeyType.CLRType : null; }
+        }
+
+        public TypeDescription KeyType
+        {
+            get { return _collectionSource.Type.IsKeyed ? _collectionSource.Type.ItemTypes[1] : null; }
+        }
+
+        public object Index { get; internal set; }
 
         #endregion
 
         #region Constructors
 
-        internal CollectionItemSource(string name, TypeDescription type)
+        internal CollectionItemSource(ICollectionSource source)
         {
-            _name = name;
-            _type = type;
+            _collectionSource = source;
         }
 
         #endregion
 
+        #region Value Source Methods
+
         public object GetValue()
         {
-            throw new NotImplementedException();
+            return _collectionSource.GetValue(Index);
         }
 
         public T GetValue<T>()
         {
-            throw new NotImplementedException();
+            return (T)_collectionSource.GetValue(Index);
         }
 
         public void SetValue(object value)
         {
-            throw new NotImplementedException();
+            _collectionSource.SetValue(Index, value);
         }
 
         public void SetValue<T>(T value)
         {
-            throw new NotImplementedException();
+            _collectionSource.SetValue(Index, value);
         }
+
+        #endregion
     }
 }
