@@ -4,7 +4,7 @@ using Orbital.Reflection;
 
 namespace Orbital.Data
 {
-    internal class ValueSource : IValueSource
+    internal abstract class ValueSource : IValueSource
     {
         #region Fields
 
@@ -29,6 +29,11 @@ namespace Orbital.Data
         public TypeDescription Type
         {
             get { return _type; }
+        }
+
+        public IValueSource UnderlyingSource
+        {
+            get { return _source; }
         }
 
         #endregion

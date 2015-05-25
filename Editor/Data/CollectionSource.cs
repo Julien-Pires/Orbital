@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using Orbital.Reflection;
 
@@ -11,7 +12,8 @@ namespace Orbital.Data
     {
         #region Fields
 
-        private readonly List<CollectionItemSource> _items = new List<CollectionItemSource>();
+        private readonly List<IValueSource> _items = new List<IValueSource>();
+        private readonly ReadOnlyCollection<IValueSource> _readItems; 
 
         #endregion
 
@@ -36,7 +38,7 @@ namespace Orbital.Data
 
         public IList<IValueSource> Items
         {
-            get { return _items.Cast<IValueSource>().ToList(); }
+            get { return _readItems; }
         } 
 
         #endregion
@@ -45,6 +47,8 @@ namespace Orbital.Data
 
         internal CollectionSource(string name, TypeDescription type, IValueSource source) : base(name, type, source)
         {
+            _readItems = new ReadOnlyCollection<IValueSource>(_items);
+
             ExtractItems();
         }
 
@@ -57,10 +61,11 @@ namespace Orbital.Data
             List<object> indexes = GetIndexes();
             for (int i = 0; i < indexes.Count; i++)
             {
-                CollectionItemSource item = new CollectionItemSource(this) {Index = i};
-                _items.Add(item);
+                CollectionItemSource item = new CollectionItemSource(this) {Index = indexes[i]};
+                IValueSource source = DataSourceHelper.CreateSource(indexes[i].ToString(), Type.ItemTypes[0], item);
+                _items.Add(source);
             }
-        } 
+        }
 
         public List<object> GetIndexes()
         {

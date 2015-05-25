@@ -34,6 +34,11 @@ namespace Orbital.Data
             get { return _property.TypeDescription.CLRType; }
         }
 
+        public IValueSource UnderlyingSource
+        {
+            get { return null; }
+        }
+
         #endregion
 
         #region Constructors

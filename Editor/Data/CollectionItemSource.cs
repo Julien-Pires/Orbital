@@ -16,6 +16,8 @@ namespace Orbital.Data
 
         public string Name { get; internal set; }
 
+        public object Index { get; internal set; }
+
         public Type CLRType
         {
             get { return Type.CLRType; }
@@ -36,7 +38,10 @@ namespace Orbital.Data
             get { return _collectionSource.Type.IsKeyed ? _collectionSource.Type.ItemTypes[1] : null; }
         }
 
-        public object Index { get; internal set; }
+        public IValueSource UnderlyingSource
+        {
+            get { return _collectionSource; }
+        }
 
         #endregion
 

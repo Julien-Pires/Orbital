@@ -2,7 +2,7 @@
 
 using Orbital.Data;
 
-namespace Orbital.GUI
+namespace Orbital.UI
 {
     internal sealed class ItemLine
     {
@@ -15,6 +15,8 @@ namespace Orbital.GUI
         #region Properties
 
         public IValueSource DataSource { get; internal set; }
+
+        public UIParameters Parameters { get; internal set; }
 
         public IVisual Visual { get; internal set; }
 

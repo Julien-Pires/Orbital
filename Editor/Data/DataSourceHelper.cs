@@ -27,7 +27,7 @@ namespace Orbital.Data
                     break;
                 
                 default:
-                    result = new ValueSource(name, type, source);
+                    result = new PrimitiveValueSource(name, type, source);
                     break;
             }
 
