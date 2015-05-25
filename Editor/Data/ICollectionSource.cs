@@ -4,15 +4,13 @@ using Orbital.Reflection;
 
 namespace Orbital.Data
 {
-    public interface ICollectionSource : IValueSource
+    public interface ICollectionSource : IValueSource, IParentSource
     {
         #region Properties
 
         new CollectionDescription Type { get; }
 
         int Count { get; }
-
-        IList<IValueSource> Items { get; }
 
         #endregion
 

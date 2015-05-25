@@ -11,7 +11,8 @@ namespace Orbital.UI
 
         private static readonly Dictionary<Type, Type> _typeMap = new Dictionary<Type, Type>
         {
-            { typeof(PrimitiveValueSource), typeof(PrimitiveVisual) }
+            { typeof(PrimitiveValueSource), typeof(PrimitiveVisual) },
+            { typeof(ObjectSource), typeof(ObjectVisual) }
         };
 
         #endregion
@@ -20,7 +21,11 @@ namespace Orbital.UI
 
         public Type GetRenderer(IValueSource source)
         {
-            throw new NotImplementedException();
+            Type type;
+            if (!_typeMap.TryGetValue(source.Type.GetType(), out type))
+                return null;
+
+            return type;
         }
 
         #endregion
