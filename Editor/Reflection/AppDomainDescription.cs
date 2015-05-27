@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 using Orbital.Extension;
 
-using UnityEngine;
-
 namespace Orbital.Reflection
 {
     internal sealed class AppDomainDescription : BaseDescription
@@ -23,7 +21,7 @@ namespace Orbital.Reflection
 
         #region Constructors
 
-        internal AppDomainDescription() : base(Application.productName)
+        internal AppDomainDescription(string domainName) : base(domainName)
         {
         }
 

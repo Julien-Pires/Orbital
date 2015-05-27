@@ -1,14 +1,26 @@
-﻿using Orbital.Source;
+﻿using Orbital.UI;
+using Orbital.Core;
+using Orbital.Source;
+using Orbital.Reflection;
 
 using UnityEditor;
+using UnityEngine;
 
 namespace Orbital
 {
     public sealed class OrbitalWindow : EditorWindow
     {
-        #region Fields
+        #region Constructors
 
-        private readonly DataSourceManager _dataSourceManager = new DataSourceManager();
+        public OrbitalWindow()
+        {
+            ServiceProvider.Current = new ServiceProvider();
+            ServiceProvider.Current.RegisterService<IDataSourceManager>(new DataSourceManager());
+            ServiceProvider.Current.RegisterService<IVisualRendererManager>(new VisualRendererManager());
+            ServiceProvider.Current.RegisterService<IAppDomainManager>(new AppDomainManager());
+
+            CreateDomain();
+        }
 
         #endregion
 
@@ -16,7 +28,16 @@ namespace Orbital
 
         public void OnGUI()
         {
-            
+        }
+
+        #endregion
+
+        #region Application Domain Methods
+
+        private void CreateDomain()
+        {
+            IAppDomainManager appDomainManager = ServiceProvider.Current.GetService<IAppDomainManager>();
+            appDomainManager.CreateDomain(Application.productName);
         }
 
         #endregion
@@ -25,16 +46,18 @@ namespace Orbital
 
         public void AddDataSource(string extension, IDataSource dataSource)
         {
-            _dataSourceManager.AddDataSource(extension, dataSource);
+            IDataSourceManager dataSourceManager = ServiceProvider.Current.GetService<IDataSourceManager>();
+            dataSourceManager.AddDataSource(extension, dataSource);
         }
 
         public void AddDataSource(string originalExtension, string newExtension)
         {
-            IDataSource dataSource = _dataSourceManager.GetDataSource(originalExtension);
+            IDataSourceManager dataSourceManager = ServiceProvider.Current.GetService<IDataSourceManager>();
+            IDataSource dataSource = dataSourceManager.GetDataSource(originalExtension);
             if(dataSource == null)
                 return;
 
-            _dataSourceManager.AddDataSource(newExtension, dataSource);
+            dataSourceManager.AddDataSource(newExtension, dataSource);
         }
 
         #endregion

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Orbital.Source
 {
-    internal sealed class DataSourceManager
+    internal sealed class DataSourceManager : IDataSourceManager
     {
         #region Fields
 

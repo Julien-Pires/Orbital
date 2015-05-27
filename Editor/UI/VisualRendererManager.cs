@@ -5,7 +5,7 @@ using Orbital.Data;
 
 namespace Orbital.UI
 {
-    internal sealed class VisualRendererManager
+    internal sealed class VisualRendererManager : IVisualRendererManager
     {
         #region Fields
 
