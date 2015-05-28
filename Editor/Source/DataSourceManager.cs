@@ -27,7 +27,8 @@ namespace Orbital.Source
         private void FindDataSource()
         {
             Assembly asm = typeof (IDataSource).Assembly;
-            var types = asm.GetTypes().Where(c => c.GetInterfaces().Any(d => d == typeof (IDataSource)));
+            var types = asm.GetTypes().Where(c => c.GetInterfaces().Any(d => d == typeof (IDataSource)))
+                                      .Where(c => !c.IsAbstract && !c.IsInterface);
             foreach (Type type in types)
             {
                 IDataSource dataSource = (IDataSource)Activator.CreateInstance(type);

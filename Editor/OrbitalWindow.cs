@@ -1,5 +1,9 @@
-﻿using Orbital.UI;
+﻿using System.Linq;
+using System.Collections.Generic;
+
+using Orbital.UI;
 using Orbital.Core;
+using Orbital.View;
 using Orbital.Source;
 using Orbital.Reflection;
 
@@ -10,10 +14,28 @@ namespace Orbital
 {
     public sealed class OrbitalWindow : EditorWindow
     {
+        #region Fields
+
+        private const string WindowName = "Orbital Editor";
+
+        private int _currentTab;
+        private readonly string[] _tabs;
+        private Dictionary<string, IView> _views = new Dictionary<string, IView>
+        {
+            { "Editor", new EditorView() },
+            { "Schema", null }
+        };
+
+        #endregion
+
         #region Constructors
 
         public OrbitalWindow()
         {
+            title = WindowName;
+
+            _tabs = _views.Keys.ToArray();
+
             ServiceProvider.Current = new ServiceProvider();
             ServiceProvider.Current.RegisterService<IDataSourceManager>(new DataSourceManager());
             ServiceProvider.Current.RegisterService<IVisualRendererManager>(new VisualRendererManager());
@@ -28,6 +50,16 @@ namespace Orbital
 
         public void OnGUI()
         {
+            _currentTab = GUILayout.Toolbar(_currentTab, _tabs);
+
+            IView view;
+            if (!_views.TryGetValue(_tabs[_currentTab], out view))
+                return;
+
+            if (view == null)
+                return;
+
+            view.Draw();
         }
 
         #endregion
