@@ -1,6 +1,6 @@
 ﻿using System;
 
-using Orbital.Source;
+using Orbital.Data;
 
 namespace Orbital.UI
 {
@@ -9,14 +9,14 @@ namespace Orbital.UI
         #region Fields
 
         private readonly Func<object, object, bool> _filterFunc;
-        private readonly Func<IDataSource, object> _getMemberFunc;
+        private readonly Func<IValueSource, object> _getMemberFunc;
         private readonly object _value;
 
         #endregion
 
         #region Constructors
 
-        internal InternalSelectorFilter(Func<object, object, bool> filterFunc, Func<IDataSource, object> memberFunc, object value)
+        internal InternalSelectorFilter(Func<object, object, bool> filterFunc, Func<IValueSource, object> memberFunc, object value)
         {
             _filterFunc = filterFunc;
             _value = value;
@@ -26,7 +26,7 @@ namespace Orbital.UI
 
         #region Filter Methods
 
-        public override bool Filter(IDataSource source)
+        public override bool Filter(IValueSource source)
         {
             object value = _getMemberFunc(source);
 

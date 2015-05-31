@@ -1,4 +1,4 @@
-﻿using Orbital.Source;
+﻿using Orbital.Data;
 
 namespace Orbital.UI
 {
@@ -6,7 +6,7 @@ namespace Orbital.UI
     {
         #region Filter Methods
 
-        public abstract bool Filter(IDataSource source);
+        public abstract bool Filter(IValueSource source);
 
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Orbital.Data;
@@ -19,12 +20,36 @@ namespace Orbital.UI
         public IVisual GetRenderer(IValueSource source)
         {
             Type rendererType = null;
-            for (int i = 0; i < _selectors.Count; i++)
+            var validSelector = from c in _selectors
+                                let result = new { Selector = c, FilterResult = c.Filter(source) }
+                                where result.FilterResult > 0
+                                orderby result.FilterResult, result.Selector.IsBuiltIn descending
+                                select result;
+
+            if (!validSelector.Any())
+                return null;
+
+            if (validSelector.Count() > 1)
             {
-                rendererType = _selectors[i].VisualType;
-                if(rendererType != null)
-                    break;
+                var previousSelector = validSelector.First();
+                foreach(var obj in validSelector)
+                {
+                    if (previousSelector == obj)
+                        continue;
+
+                    if (previousSelector.FilterResult != obj.FilterResult)
+                        continue;
+
+                    if (!previousSelector.Selector.IsBuiltIn)
+                        continue;
+
+                    previousSelector = obj;
+                }
+
+                rendererType = previousSelector.Selector.VisualType;
             }
+            else
+                rendererType = validSelector.First().Selector.VisualType;
 
             return (rendererType == null) ? null : EnsureRenderer(rendererType);
         }

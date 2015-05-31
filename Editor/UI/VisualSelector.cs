@@ -4,7 +4,7 @@ using System.Collections;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 
-using Orbital.Source;
+using Orbital.Data;
 
 namespace Orbital.UI
 {
@@ -21,8 +21,8 @@ namespace Orbital.UI
             { FilterType.In, In }
         };
 
-        private static readonly Dictionary<Expression<Func<IDataSource, object>>, Func<IDataSource, object>> CachedExpression = 
-            new Dictionary<Expression<Func<IDataSource, object>>, Func<IDataSource, object>>();
+        private static readonly Dictionary<Expression<Func<IValueSource, object>>, Func<IValueSource, object>> CachedExpression = 
+            new Dictionary<Expression<Func<IValueSource, object>>, Func<IValueSource, object>>();
 
         private readonly Type _visualType;
         private readonly List<SelectorFilter> _filters = new List<SelectorFilter>();
@@ -35,6 +35,8 @@ namespace Orbital.UI
         {
             get { return _visualType; }
         }
+
+        internal bool IsBuiltIn { get; set; }
 
         #endregion
 
@@ -52,27 +54,36 @@ namespace Orbital.UI
 
         #region Filter Methods
 
-        public void EqualsTo(Expression<Func<IDataSource, object>> member, object value)
+        internal int Filter(IValueSource source)
+        {
+            int result = 0;
+            for (int i = 0; i < _filters.Count; i++)
+                result += _filters[i].Filter(source) ? 1 : 0;
+
+            return result;
+        }
+
+        public void EqualsTo(Expression<Func<IValueSource, object>> member, object value)
         {
             AddFilter(GetFilterFunc(FilterType.EqualsTo), GetCompiledExpression(member), value);
         }
 
-        public void StartsWith(Expression<Func<IDataSource, object>> member, string value)
+        public void StartsWith(Expression<Func<IValueSource, object>> member, string value)
         {
             AddFilter(GetFilterFunc(FilterType.StartsWith), GetCompiledExpression(member), value);
         }
 
-        public void EndsWith(Expression<Func<IDataSource, object>> member, string value)
+        public void EndsWith(Expression<Func<IValueSource, object>> member, string value)
         {
             AddFilter(GetFilterFunc(FilterType.EndsWith), GetCompiledExpression(member), value);
         }
 
-        public void In(Expression<Func<IDataSource, object>> member, IEnumerable value)
+        public void In(Expression<Func<IValueSource, object>> member, IEnumerable value)
         {
             AddFilter(GetFilterFunc(FilterType.In), GetCompiledExpression(member), value);
         }
 
-        private void AddFilter(Func<object, object, bool> filterFunc, Func<IDataSource, object> memberFunc, object value)
+        private void AddFilter(Func<object, object, bool> filterFunc, Func<IValueSource, object> memberFunc, object value)
         {
             InternalSelectorFilter filter = new InternalSelectorFilter(filterFunc, memberFunc, value);
             _filters.Add(filter);
@@ -115,16 +126,10 @@ namespace Orbital.UI
 
         #region Expression Cache Methods
 
-        private static Func<IDataSource, object> GetCompiledExpression(Expression<Func<IDataSource, object>> expression)
+        private static Func<IValueSource, object> GetCompiledExpression(Expression<Func<IValueSource, object>> expression)
         {
-            Func<IDataSource, object> result;
-            if(!CachedExpression.TryGetValue(expression, out result))
-            {
-                result = expression.Compile();
-                CachedExpression[expression] = result;
-            }
-
-            return result;
+            // TODO : Implement expression caching
+            return expression.Compile();
         }
 
         #endregion

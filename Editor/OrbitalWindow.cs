@@ -42,6 +42,7 @@ namespace Orbital
             ServiceProvider.Current.RegisterService<IAppDomainManager>(new AppDomainManager());
 
             CreateDomain();
+            CreateUISelectors();
         }
 
         #endregion
@@ -60,6 +61,20 @@ namespace Orbital
                 return;
 
             view.Draw();
+        }
+
+        private void CreateUISelectors()
+        {
+            IVisualRendererManager rendererManager = ServiceProvider.Current.GetService<IVisualRendererManager>();
+
+            VisualSelector selector = new VisualSelector(typeof(PrimitiveVisual));
+            selector.In(c => c.Type.Kind, new[] { TypeKind.Bool, TypeKind.Byte, TypeKind.Double, TypeKind.Float, TypeKind.Int,
+                TypeKind.Long, TypeKind.Short, TypeKind.String });
+            rendererManager.AddVisualFilter(selector);
+
+            selector = new VisualSelector(typeof(ObjectVisual));
+            selector.In(c => c.Type.Kind, new[] { TypeKind.Class, TypeKind.Struct });
+            rendererManager.AddVisualFilter(selector);
         }
 
         #endregion
