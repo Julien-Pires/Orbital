@@ -8,7 +8,7 @@ namespace Orbital.UI
 
         IVisual GetRenderer(IValueSource source);
 
-        void RegisterSelector(IUISelector selector);
+        void AddVisualFilter(VisualSelector selector);
 
         #endregion
     }

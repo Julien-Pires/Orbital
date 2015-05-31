@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Orbital.UI;
-
 namespace Orbital.View
 {
     internal sealed class EditorView : IView

@@ -13,7 +13,7 @@ namespace Orbital.Data
         #region Fields
 
         private readonly List<IValueSource> _items = new List<IValueSource>();
-        private readonly ReadOnlyCollection<IValueSource> _readItems; 
+        private readonly ReadOnlyCollection<IValueSource> _readItems;
 
         #endregion
 
@@ -39,7 +39,12 @@ namespace Orbital.Data
         public IList<IValueSource> Items
         {
             get { return _readItems; }
-        } 
+        }
+
+        public TypeDescription ItemType
+        {
+            get { return Type.IsKeyed ? Type.ItemTypes[1] : Type.ItemTypes[0]; }
+        }
 
         #endregion
 
@@ -60,11 +65,21 @@ namespace Orbital.Data
         {
             List<object> indexes = GetIndexes();
             for (int i = 0; i < indexes.Count; i++)
-            {
-                CollectionItemSource item = new CollectionItemSource(this) {Index = indexes[i]};
-                IValueSource source = DataSourceHelper.CreateSource(indexes[i].ToString(), Type.ItemTypes[0], item);
-                _items.Add(source);
-            }
+                AddItem(indexes[i]);
+        }
+
+        private object CreateItem()
+        {
+            return Activator.CreateInstance(ItemType.CLRType);
+        }
+
+        public void AddItem(object index)
+        {
+            SetValue(index, CreateItem());
+
+            CollectionItemSource item = new CollectionItemSource(this) { Index = index };
+            IValueSource source = DataSourceHelper.CreateSource(index.ToString(), ItemType, item);
+            _items.Add(source);
         }
 
         public List<object> GetIndexes()

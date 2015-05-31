@@ -9,7 +9,7 @@ namespace Orbital.UI
     {
         #region Fields
 
-        private readonly List<IUISelector> _selectors = new List<IUISelector>();
+        private readonly List<VisualSelector> _selectors = new List<VisualSelector>();
         private readonly Dictionary<Type, IVisual> _renderers = new Dictionary<Type, IVisual>();
 
         #endregion
@@ -21,7 +21,7 @@ namespace Orbital.UI
             Type rendererType = null;
             for (int i = 0; i < _selectors.Count; i++)
             {
-                rendererType = _selectors[i].GetRenderer(source);
+                rendererType = _selectors[i].VisualType;
                 if(rendererType != null)
                     break;
             }
@@ -45,7 +45,7 @@ namespace Orbital.UI
 
         #region Selectors Methods
 
-        public void RegisterSelector(IUISelector selector)
+        public void AddVisualFilter(VisualSelector selector)
         {
             if (_selectors.Contains(selector))
                 return;
