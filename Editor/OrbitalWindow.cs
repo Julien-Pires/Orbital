@@ -75,6 +75,10 @@ namespace Orbital
             selector = new VisualSelector(typeof(ObjectVisual));
             selector.In(c => c.Type.Kind, new[] { TypeKind.Class, TypeKind.Struct });
             rendererManager.AddVisualFilter(selector);
+
+            selector = new VisualSelector(typeof(EnumVisual));
+            selector.EqualsTo(c => c.Type.Kind, TypeKind.Enum);
+            rendererManager.AddVisualFilter(selector);
         }
 
         #endregion

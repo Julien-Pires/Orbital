@@ -59,15 +59,14 @@ namespace Orbital.UI
 
         private static void DrawShort(IValueSource source)
         {
-            int value = EditorGUILayout.IntField(source.Name, source.GetValue<short>());
-            short shortValue;
+            short shortValue = source.GetValue<short>();
+            int value = EditorGUILayout.IntField(source.Name, shortValue);
             try
             {
                 shortValue = Convert.ToInt16(value);
             }
             catch (OverflowException)
             {
-                shortValue = 0;
             }
 
             source.SetValue(shortValue);
@@ -99,15 +98,14 @@ namespace Orbital.UI
 
         private static void DrawByte(IValueSource source)
         {
-            int value = EditorGUILayout.IntField(source.Name, source.GetValue<byte>());
-            byte byteValue;
+            byte byteValue = source.GetValue<byte>();
+            int value = EditorGUILayout.IntField(source.Name, byteValue);
             try
             {
                 byteValue = Convert.ToByte(value);
             }
             catch (OverflowException)
             {
-                byteValue = 0;
             }
 
             source.SetValue(byteValue);
