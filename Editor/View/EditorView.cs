@@ -10,6 +10,12 @@ namespace Orbital.View
 
         #endregion
 
+        #region Items Methods
+
+
+
+        #endregion
+
         #region Draw Methods
 
         public void Draw()

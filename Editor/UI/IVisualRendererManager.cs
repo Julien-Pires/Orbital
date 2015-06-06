@@ -6,7 +6,7 @@ namespace Orbital.UI
     {
         #region Methods
 
-        IVisual GetRenderer(IValueSource source);
+        BaseViual GetRenderer(IValueSource source);
 
         void AddVisualFilter(VisualSelector selector);
 

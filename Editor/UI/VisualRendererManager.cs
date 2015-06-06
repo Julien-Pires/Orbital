@@ -11,13 +11,13 @@ namespace Orbital.UI
         #region Fields
 
         private readonly List<VisualSelector> _selectors = new List<VisualSelector>();
-        private readonly Dictionary<Type, IVisual> _renderers = new Dictionary<Type, IVisual>();
+        private readonly Dictionary<Type, BaseViual> _renderers = new Dictionary<Type, BaseViual>();
 
         #endregion
 
         #region Renderers Methods
 
-        public IVisual GetRenderer(IValueSource source)
+        public BaseViual GetRenderer(IValueSource source)
         {
             Type rendererType = null;
             var validSelector = from c in _selectors
@@ -54,13 +54,13 @@ namespace Orbital.UI
             return (rendererType == null) ? null : EnsureRenderer(rendererType);
         }
 
-        private IVisual EnsureRenderer(Type type)
+        private BaseViual EnsureRenderer(Type type)
         {
-            IVisual renderer;
+            BaseViual renderer;
             if (_renderers.TryGetValue(type, out renderer))
                 return renderer;
 
-            renderer = (IVisual)Activator.CreateInstance(type);
+            renderer = (BaseViual)Activator.CreateInstance(type);
             _renderers[type] = renderer;
 
             return renderer;

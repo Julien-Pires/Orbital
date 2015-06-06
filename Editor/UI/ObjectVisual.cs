@@ -2,7 +2,7 @@
 
 namespace Orbital.UI
 {
-    internal sealed class ObjectVisual : IVisual
+    internal sealed class ObjectVisual : BaseViual
     {
         #region Fields
 
@@ -12,16 +12,16 @@ namespace Orbital.UI
 
         #region GUI Methods
 
-        public void BeginDraw(IValueSource source, UIParameters parameters)
+        public override void BeginDraw(IValueSource source, UIParameters parameters)
         {
         }
 
-        public void Draw(IValueSource source, UIParameters parameters)
+        public override void Draw(IValueSource source, UIParameters parameters)
         {
             
         }
 
-        public void EndDraw(IValueSource source, UIParameters parameters)
+        public override void EndDraw(IValueSource source, UIParameters parameters)
         {
         }
 

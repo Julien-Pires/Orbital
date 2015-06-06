@@ -6,21 +6,21 @@ using UnityEditor;
 
 namespace Orbital.UI
 {
-    internal sealed class EnumVisual : IVisual
+    internal sealed class EnumVisual : BaseViual
     {
         #region Draw Methods
 
-        public void BeginDraw(IValueSource source, UIParameters parameters)
+        public override void BeginDraw(IValueSource source, UIParameters parameters)
         {
         }
 
-        public void Draw(IValueSource source, UIParameters parameters)
+        public override void Draw(IValueSource source, UIParameters parameters)
         {
             Enum value = EditorGUILayout.EnumPopup(source.GetValue<Enum>());
             source.SetValue(value);
         }
 
-        public void EndDraw(IValueSource source, UIParameters parameters)
+        public override void EndDraw(IValueSource source, UIParameters parameters)
         {
         }
 

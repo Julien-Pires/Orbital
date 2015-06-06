@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace Orbital.UI
 {
-    internal sealed class PrimitiveVisual : IVisual
+    internal sealed class PrimitiveVisual : BaseViual
     {
         #region Delegates
 
@@ -34,15 +34,15 @@ namespace Orbital.UI
 
         #region GUI Methods
 
-        public void BeginDraw(IValueSource source, UIParameters parameters)
+        public override void BeginDraw(IValueSource source, UIParameters parameters)
         {
         }
 
-        public void EndDraw(IValueSource source, UIParameters parameters)
+        public override void EndDraw(IValueSource source, UIParameters parameters)
         {
         }
 
-        public void Draw(IValueSource source, UIParameters parameters)
+        public override void Draw(IValueSource source, UIParameters parameters)
         {
             DrawPrimitive draw;
             if(!DrawMaps.TryGetValue(source.CLRType, out draw))
