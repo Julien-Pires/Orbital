@@ -2,10 +2,10 @@
 
 using Newtonsoft.Json;
 
-namespace Orbital.Source
+namespace Orbital.Serializer
 {
-    [DataSource(Extensions =  new []{ ".json" })]
-    internal sealed class JSonDataSource : BaseDataSource
+    [Serializer(Extensions =  new []{ ".json" })]
+    internal sealed class JsonDataSerializer : BaseSerializer
     {
         #region IDataSource implementation
 

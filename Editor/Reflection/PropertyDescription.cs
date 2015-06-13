@@ -8,6 +8,8 @@
 
         public bool IsField { get; private set; }
 
+        public bool IsPrimaryKey { get; internal set; }
+
         #endregion
 
         #region Constructors

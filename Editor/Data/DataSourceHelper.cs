@@ -19,15 +19,15 @@ namespace Orbital.Data
                 case TypeKind.Array:
                 case TypeKind.List:
                 case TypeKind.Dictionary:
-                    result = new CollectionSource(name, type, source);
+                    result = new CollectionSource(name, (CollectionDescription)type, source);
                     break;
 
                 case TypeKind.Enum:
-                    result = new EnumSource(name, type, source);
+                    result = new EnumSource(name, (EnumDescription)type, source);
                     break;
                 
                 default:
-                    result = new PrimitiveValueSource(name, type, source);
+                    result = new PrimitiveValueSource(name, (PrimitiveDescription)type, source);
                     break;
             }
 

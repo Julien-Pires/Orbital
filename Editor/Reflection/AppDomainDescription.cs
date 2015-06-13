@@ -91,7 +91,8 @@ namespace Orbital.Reflection
                 (type.IsClass ? TypeKind.Class : TypeKind.Struct), type);
             assembly.RegisterType(type.Namespace, objDescription);
 
-            ExtractObjectProperties(objDescription, type);
+            ExtractObjectProperties(objDescription);
+            ExtractObjectKeys(objDescription);
 
             return objDescription;
         }
@@ -157,9 +158,9 @@ namespace Orbital.Reflection
             return GetType(assemblyName, type.FullName) ?? RegisterTypeFromClrType(type);
         }
 
-        private void ExtractObjectProperties(ObjectDescription objDescription, Type type)
+        private void ExtractObjectProperties(ObjectDescription objDescription)
         {
-            PropertyInfo[] properties = type.GetProperties(FieldsFlag);
+            PropertyInfo[] properties = objDescription.CLRType.GetProperties(FieldsFlag);
             for (int i = 0; i < properties.Length; i++)
             {
                 if(!properties[i].CanRead || !properties[i].CanWrite)
@@ -177,7 +178,7 @@ namespace Orbital.Reflection
                 objDescription[propertyDescription.Name] = propertyDescription;
             }
 
-            FieldInfo[] fields = type.GetFields(FieldsFlag);
+            FieldInfo[] fields = objDescription.CLRType.GetFields(FieldsFlag);
             for (int i = 0; i < fields.Length; i++)
             {
                 if (fields[i].IsInitOnly)
@@ -191,6 +192,15 @@ namespace Orbital.Reflection
 
                 objDescription[propertyDescription.Name] = propertyDescription;
             }
+        }
+
+        private static void ExtractObjectKeys(ObjectDescription objDescription)
+        {
+            Type objType = objDescription.CLRType;
+            var members = objType.GetProperties().Cast<MemberInfo>().Union(objType.GetFields());
+            MemberInfo primaryKey = members.Where(c => c.GetCustomAttributes(typeof(PrimaryKey), true).Length > 0).FirstOrDefault();
+            if (primaryKey != null)
+                objDescription[primaryKey.Name].IsPrimaryKey = true;
         }
 
         #endregion

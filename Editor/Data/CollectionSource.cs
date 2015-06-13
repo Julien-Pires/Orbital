@@ -8,7 +8,7 @@ using Orbital.Reflection;
 
 namespace Orbital.Data
 {
-    internal sealed class CollectionSource : ValueSource, ICollectionSource
+    internal sealed class CollectionSource : ValueSource<CollectionDescription>, ICollectionSource
     {
         #region Fields
 
@@ -50,7 +50,7 @@ namespace Orbital.Data
 
         #region Constructors
 
-        internal CollectionSource(string name, TypeDescription type, IValueSource source) : base(name, type, source)
+        internal CollectionSource(string name, CollectionDescription type, IValueSource source) : base(name, type, source)
         {
             _readItems = new ReadOnlyCollection<IValueSource>(_items);
 

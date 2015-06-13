@@ -44,7 +44,7 @@ namespace Orbital.UI
 
         public VisualSelector(Type visualType)
         {
-            if (!visualType.GetInterfaces().Any(c => c == typeof(BaseViual)))
+            if (!visualType.IsSubclassOf(typeof(BaseViual)))
                 throw new ArgumentException("Provided type does not implement IVisual");
 
             _visualType = visualType;

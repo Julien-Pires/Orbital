@@ -8,8 +8,6 @@
 
         public string Assembly { get; set; }
 
-        public string Namespace { get; set; }
-
         public string Type { get; set; }
 
         #endregion

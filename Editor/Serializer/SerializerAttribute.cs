@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Orbital.Source
+namespace Orbital.Serializer
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public sealed class DataSourceAttribute : Attribute
+    public sealed class SerializerAttribute : Attribute
     {
         #region Properties
 

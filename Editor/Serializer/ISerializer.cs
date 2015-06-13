@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Orbital.Source
+namespace Orbital.Serializer
 {
-    public interface IDataSource
+    public interface ISerializer
     {
         #region Methods
 

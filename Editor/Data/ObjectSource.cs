@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Orbital.Reflection;
 
 namespace Orbital.Data
 {
-    internal sealed class ObjectSource : ValueSource, IParentSource
+    internal sealed class ObjectSource : ValueSource<ObjectDescription>, IParentSource
     {
         #region Fields
 
@@ -19,7 +20,22 @@ namespace Orbital.Data
         public IList<IValueSource> Items
         {
             get { return _readProperties; }
-        } 
+        }
+
+        public IValueSource this[string name]
+        {
+            get { return _properties.FirstOrDefault(c => c.Name == name); }
+        }
+
+        public IValueSource PrimaryKey
+        {
+            get
+            {
+                PropertyDescription primaryKey = Type.PrimaryKey;
+
+                return (primaryKey != null) ? _properties.FirstOrDefault(c => c.Name == primaryKey.Name) : null;
+            }
+        }
 
         #endregion
 
@@ -39,10 +55,9 @@ namespace Orbital.Data
         private void ExtractProperties()
         {
             object parent = GetValue();
-            ObjectDescription objDescription = (ObjectDescription)Type;
-            foreach(string name in objDescription.PropertiesName)
+            foreach(string name in Type.PropertiesName)
             {
-                PropertyDescription propertyDescription = objDescription[name];
+                PropertyDescription propertyDescription = Type[name];
                 PropertySource propertySource = new PropertySource(parent, propertyDescription);
                 IValueSource source = DataSourceHelper.CreateSource(propertyDescription.Name, propertyDescription.TypeDescription, propertySource);
                 _properties.Add(source);

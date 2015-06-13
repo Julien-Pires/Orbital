@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Orbital.UI;
 using Orbital.Core;
 using Orbital.View;
-using Orbital.Source;
+using Orbital.Serializer;
 using Orbital.Reflection;
 
 using UnityEditor;
@@ -37,7 +37,7 @@ namespace Orbital
             _tabs = _views.Keys.ToArray();
 
             ServiceProvider.Current = new ServiceProvider();
-            ServiceProvider.Current.RegisterService<IDataSourceManager>(new DataSourceManager());
+            ServiceProvider.Current.RegisterService<IDataSerializerManager>(new DataSerializerManager());
             ServiceProvider.Current.RegisterService<IVisualRendererManager>(new VisualRendererManager());
             ServiceProvider.Current.RegisterService<IAppDomainManager>(new AppDomainManager());
 
@@ -95,20 +95,20 @@ namespace Orbital
 
         #region Data Source Methods
 
-        public void AddDataSource(string extension, IDataSource dataSource)
+        public void AddSerializer(string extension, ISerializer serializer)
         {
-            IDataSourceManager dataSourceManager = ServiceProvider.Current.GetService<IDataSourceManager>();
-            dataSourceManager.AddDataSource(extension, dataSource);
+            IDataSerializerManager dataSourceManager = ServiceProvider.Current.GetService<IDataSerializerManager>();
+            dataSourceManager.AddSerializer(extension, serializer);
         }
 
-        public void AddDataSource(string originalExtension, string newExtension)
+        public void AddSerializer(string originalExtension, string newExtension)
         {
-            IDataSourceManager dataSourceManager = ServiceProvider.Current.GetService<IDataSourceManager>();
-            IDataSource dataSource = dataSourceManager.GetDataSource(originalExtension);
+            IDataSerializerManager dataSourceManager = ServiceProvider.Current.GetService<IDataSerializerManager>();
+            ISerializer dataSource = dataSourceManager.GetSerializer(originalExtension);
             if(dataSource == null)
                 return;
 
-            dataSourceManager.AddDataSource(newExtension, dataSource);
+            dataSourceManager.AddSerializer(newExtension, dataSource);
         }
 
         #endregion

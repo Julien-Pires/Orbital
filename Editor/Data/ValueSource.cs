@@ -4,13 +4,13 @@ using Orbital.Reflection;
 
 namespace Orbital.Data
 {
-    internal abstract class ValueSource : IValueSource
+    internal abstract class ValueSource<TDescription> : IValueSource where TDescription : TypeDescription
     {
         #region Fields
 
         private readonly string _name;
         private readonly IValueSource _source;
-        private readonly TypeDescription _type;
+        private readonly TDescription _type;
 
         #endregion
 
@@ -26,7 +26,12 @@ namespace Orbital.Data
             get { return _type.CLRType; }
         }
 
-        public TypeDescription Type
+        public TDescription Type
+        {
+            get { return _type; }
+        }
+
+        TypeDescription IValueSource.Type
         {
             get { return _type; }
         }
@@ -40,7 +45,7 @@ namespace Orbital.Data
 
         #region Constructors
 
-        internal ValueSource(string name, TypeDescription type, IValueSource source)
+        internal ValueSource(string name, TDescription type, IValueSource source)
         {
             _name = name;
             _type = type;

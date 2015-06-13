@@ -2,10 +2,10 @@
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Orbital.Source
+namespace Orbital.Serializer
 {
-    [DataSource(Extensions = new[] { ".xml" })]
-    internal sealed class XmlDataSource : BaseDataSource
+    [Serializer(Extensions = new[] { ".xml" })]
+    internal sealed class XmlDataSerializer : BaseSerializer
     {
         #region IDataSource implementation
 

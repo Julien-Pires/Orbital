@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Orbital.Reflection
@@ -31,6 +32,11 @@ namespace Orbital.Reflection
         public bool IsStruct
         {
             get { return Kind == TypeKind.Struct; }
+        }
+
+        public PropertyDescription PrimaryKey
+        {
+            get { return _properties.Values.Where(c => c.IsPrimaryKey).FirstOrDefault(); }
         }
 
         #endregion

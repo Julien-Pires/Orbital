@@ -2,11 +2,11 @@
 
 namespace Orbital.Data
 {
-    internal sealed class PrimitiveValueSource : ValueSource
+    internal sealed class PrimitiveValueSource : ValueSource<PrimitiveDescription>
     {
         #region Constructors
 
-        internal PrimitiveValueSource(string name, TypeDescription type, IValueSource source) : base(name, type, source)
+        internal PrimitiveValueSource(string name, PrimitiveDescription type, IValueSource source) : base(name, type, source)
         {
         }
 

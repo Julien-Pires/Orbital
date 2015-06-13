@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-namespace Orbital.Source
+namespace Orbital.Serializer
 {
-    public abstract class BaseDataSource : IDataSource
+    public abstract class BaseSerializer : ISerializer
     {
         #region IDataSource Implementation
 

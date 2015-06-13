@@ -2,11 +2,11 @@
 
 namespace Orbital.Data
 {
-    internal sealed class EnumSource : ValueSource
+    internal sealed class EnumSource : ValueSource<EnumDescription>
     {
         #region Constructors
 
-        internal EnumSource(string name, TypeDescription type, IValueSource source) : base(name, type, source)
+        internal EnumSource(string name, EnumDescription type, IValueSource source) : base(name, type, source)
         {
         }
 
