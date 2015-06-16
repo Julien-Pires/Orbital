@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Orbital.UI;
+using Orbital.Data;
 using Orbital.Core;
 using Orbital.View;
 using Orbital.Serializer;
@@ -40,6 +41,7 @@ namespace Orbital
             ServiceProvider.Current.RegisterService<IDataSerializerManager>(new DataSerializerManager());
             ServiceProvider.Current.RegisterService<IVisualRendererManager>(new VisualRendererManager());
             ServiceProvider.Current.RegisterService<IAppDomainManager>(new AppDomainManager());
+            ServiceProvider.Current.RegisterService<IDataSourceManager>(new DataSourceManager());
 
             CreateDomain();
             CreateUISelectors();

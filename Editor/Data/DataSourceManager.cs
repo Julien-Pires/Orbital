@@ -6,7 +6,7 @@ using Orbital.Reflection;
 
 namespace Orbital.Data
 {
-    internal sealed class DataSourceManager
+    internal sealed class DataSourceManager : IDataSourceManager
     {
         #region Fields
 
@@ -16,12 +16,12 @@ namespace Orbital.Data
 
         #region Data Source Methods
 
-        internal bool SourceExists(string path)
+        public bool SourceExists(string path)
         {
             return _sources.Any(c => c.SourceInfo.Path == path);
         }
 
-        internal void AddSource(string path, ObjectDescription type)
+        public void AddSource(string path, ObjectDescription type)
         {
             if (SourceExists(path))
                 throw new ArgumentException("File {0} already exists", path);

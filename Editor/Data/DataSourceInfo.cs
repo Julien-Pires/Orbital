@@ -33,6 +33,34 @@ namespace Orbital.Data
 
         #endregion
 
+        #region Events
+
+        public event EventHandler<DataSourceItemArgs> ItemAdded;
+
+        public event EventHandler<DataSourceItemArgs> ItemRemoved;
+
+        #endregion
+
+        #region Events Invokers
+
+        private void OnItemAdded(IValueSource item)
+        {
+            DataSourceItemArgs args = new DataSourceItemArgs(item);
+            EventHandler<DataSourceItemArgs> handler = ItemAdded;
+            if (handler != null)
+                handler(this, args);
+        }
+
+        private void OnItemRemoved(IValueSource item)
+        {
+            DataSourceItemArgs args = new DataSourceItemArgs(item);
+            EventHandler<DataSourceItemArgs> handler = ItemRemoved;
+            if (handler != null)
+                handler(this, args);
+        }
+
+        #endregion
+
         #region Constructors
 
         internal DataSourceInfo(string path, ObjectDescription type)
@@ -65,11 +93,19 @@ namespace Orbital.Data
             source.PrimaryKey.SetValue(primaryKey);
 
             _datas.Add(source);
+
+            OnItemAdded(source);
         }
 
         internal void RemoveItem(string primaryKey)
         {
+            ObjectSource source = _datas.FirstOrDefault(c => c.PrimaryKey.GetValue<string>() == primaryKey);
+            if (source == null)
+                return;
+
             _datas.RemoveAll(c => c.PrimaryKey.GetValue<string>() == primaryKey);
+
+            OnItemRemoved(source);
         }
 
         #endregion
