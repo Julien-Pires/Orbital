@@ -31,6 +31,11 @@ namespace Orbital.Data
             get { return _type; }
         }
 
+        internal List<ObjectSource> Data
+        {
+            get { return _datas; }
+        }
+
         #endregion
 
         #region Events

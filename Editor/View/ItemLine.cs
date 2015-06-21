@@ -4,13 +4,18 @@ using Orbital.UI;
 using Orbital.Data;
 using Orbital.Core;
 
+using UnityEditor;
+
 namespace Orbital.View
 {
     internal sealed class ItemLine
     {
         #region Fields
 
+        private const string ChildrenFoldParameter = "ChildFold";
+
         private List<ItemLine> _children;
+        private bool _hasChildren;
 
         #endregion
 
@@ -28,6 +33,8 @@ namespace Orbital.View
 
         internal ItemLine(IValueSource source)
         {
+            _children = new List<ItemLine>();
+
             DataSource = source;
             Visual = GetVisual(source);
             Parameters = new UIParameters();
@@ -50,7 +57,22 @@ namespace Orbital.View
 
         internal void Draw()
         {
+            if (Visual == null)
+                return;
 
+            IParentSource parent = DataSource as IParentSource;
+            bool childVisible = Parameters.InternalGetValue<bool>(ChildrenFoldParameter);
+            if (parent != null)
+                childVisible = EditorGUILayout.Foldout(childVisible, Visual.Title);
+
+            Visual.Draw(DataSource, Parameters);
+            if (childVisible)
+            {
+                for (int i = 0; i < _children.Count; i++)
+                    _children[i].Draw();
+            }
+
+            Parameters.InternalSetValue(ChildrenFoldParameter, childVisible);
         }
 
         #endregion

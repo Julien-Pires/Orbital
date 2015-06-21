@@ -21,6 +21,11 @@ namespace Orbital.Data
             return _sources.Any(c => c.SourceInfo.Path == path);
         }
 
+        public DataSourceInfo GetSource(string path)
+        {
+            return _sources.FirstOrDefault(c => c.SourceInfo.Path == path);
+        }
+
         public void AddSource(string path, ObjectDescription type)
         {
             if (SourceExists(path))
